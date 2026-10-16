@@ -1,0 +1,509 @@
+{
+  "schema_version": 1,
+  "id": "sat-engineer-c-multiple",
+  "revision": "v1.0.0",
+  "title": "C · 다중 포인터와 함수 전달을 풀어요",
+  "description": "중간 주소와 마지막 값을 구분해요. 필수 6문제와 선택 도전 1문제예요.",
+  "sources": [
+    "https://en.cppreference.com/w/c/language/pointer.html",
+    "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+  ],
+  "sections": [
+    {
+      "id": "how",
+      "title": "예상하고, 실행하고, 한 줄만 바꿔요",
+      "body": "실행하기 전에 결과를 먼저 예상해요.\n틀린 이유는 변수 칸이나 자료의 행에서 찾아요.\n준비 코드를 조금 바꾸고 결과를 비교해요.\n마지막 선택 도전은 힌트 없이 먼저 풀어봐요."
+    },
+    {
+      "id": "memory",
+      "title": "화살표를 그리는 순서",
+      "body": "a와 b의 값 칸을 먼저 그려요.\np는 어느 값 칸의 주소인지 연결해요.\npp는 p 칸의 주소를 연결해요.\n별 하나마다 화살표를 한 번 따라가요.\n대입 왼쪽이 어떤 칸인지 표시한 뒤 계산해요."
+    }
+  ],
+  "review_enabled": false,
+  "tasks": [
+    {
+      "id": "double-read",
+      "title": "화살표 두 개를 따라 읽어요",
+      "goal": "이중 포인터는 포인터의 주소를 저장해요.\n\npp가 p의 주소를 가지게 해요.\n**pp를 읽으면 a가 나와야 해요.",
+      "language": "c",
+      "entry_file": "main.c",
+      "starter_code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int *q = &b;\n    // 포인터 칸을 가리키는 포인터예요.\n    int **pp = &q;\n    printf(\"%d\\n\", **pp);\n    return 0;\n}\n",
+      "solution": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int *q = &b;\n    // 포인터 칸을 가리키는 포인터예요.\n    int **pp = &p;\n    printf(\"%d\\n\", **pp);\n    return 0;\n}\n",
+      "files": {},
+      "tests": [
+        {
+          "input": "3 8\n",
+          "expected": "3"
+        },
+        {
+          "input": "7 12\n",
+          "expected": "7"
+        },
+        {
+          "input": "11 4\n",
+          "expected": "11"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "변수 칸과 그 칸을 가리키는 화살표를 그려 보세요.",
+        "int **pp = &p;"
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int *q = &b;\n    // 포인터 칸을 가리키는 포인터예요.\n    int **pp = &q;\n    printf(\"%d\\n\", **pp);\n    return 0;\n}\n",
+          "say": "먼저 값을 예상하고 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 8"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. *pp는 포인터이고 **pp는 최종 값이에요."
+        },
+        {
+          "action": "patch_code",
+          "before": "int **pp = &q;",
+          "after": "int **pp = &p;",
+          "say": "대상 칸을 확인하고 작은 부분만 바꿔요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 3"
+        },
+        {
+          "action": "submit"
+        }
+      ]
+    },
+    {
+      "id": "double-write",
+      "title": "두 번 따라간 칸에 써요",
+      "goal": "**pp 대입은 마지막 변수 칸의 값을 바꿔요.\n\nb를 직접 바꾸지 말고 pp를 통해 a를 바꾸세요.\n마지막 출력은 바뀐 a와 원래 b예요.",
+      "language": "c",
+      "entry_file": "main.c",
+      "starter_code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int **pp = &p;\n    // 두 화살표를 따라 a의 칸에 써요.\n    b = a + b;\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
+      "solution": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int **pp = &p;\n    // 두 화살표를 따라 a의 칸에 써요.\n    **pp = a + b;\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
+      "files": {},
+      "tests": [
+        {
+          "input": "3 8\n",
+          "expected": "11 8"
+        },
+        {
+          "input": "7 12\n",
+          "expected": "19 12"
+        },
+        {
+          "input": "11 4\n",
+          "expected": "15 4"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "변수 칸과 그 칸을 가리키는 화살표를 그려 보세요.",
+        "**pp = a + b;"
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int **pp = &p;\n    // 두 화살표를 따라 a의 칸에 써요.\n    b = a + b;\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
+          "say": "먼저 값을 예상하고 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 3 11"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. *pp와 **pp는 대입할 수 있는 값의 종류도 달라요."
+        },
+        {
+          "action": "patch_code",
+          "before": "b = a + b;",
+          "after": "**pp = a + b;",
+          "say": "대상 칸을 확인하고 작은 부분만 바꿔요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 11 8"
+        },
+        {
+          "action": "submit"
+        }
+      ]
+    },
+    {
+      "id": "double-retarget",
+      "title": "중간 포인터의 방향을 바꿔요",
+      "goal": "*pp에 주소를 넣으면 중간 포인터 p가 바뀌어요.\n\na 값을 b로 바꾸지 말고 p를 b로 돌리세요.\n**pp=b를 *pp=&b로 바꿔요.",
+      "language": "c",
+      "entry_file": "main.c",
+      "starter_code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int **pp = &p;\n    // 중간 화살표만 b로 돌려요.\n    **pp = b;\n    printf(\"%d %d\\n\", a, *p);\n    return 0;\n}\n",
+      "solution": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int **pp = &p;\n    // 중간 화살표만 b로 돌려요.\n    *pp = &b;\n    printf(\"%d %d\\n\", a, *p);\n    return 0;\n}\n",
+      "files": {},
+      "tests": [
+        {
+          "input": "3 8\n",
+          "expected": "3 8"
+        },
+        {
+          "input": "7 12\n",
+          "expected": "7 12"
+        },
+        {
+          "input": "11 4\n",
+          "expected": "11 4"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "변수 칸과 그 칸을 가리키는 화살표를 그려 보세요.",
+        "*pp = &b;"
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int **pp = &p;\n    // 중간 화살표만 b로 돌려요.\n    **pp = b;\n    printf(\"%d %d\\n\", a, *p);\n    return 0;\n}\n",
+          "say": "먼저 값을 예상하고 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 8 8"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. 최종 값 변경과 중간 주소 변경을 구분해요."
+        },
+        {
+          "action": "patch_code",
+          "before": "**pp = b;",
+          "after": "*pp = &b;",
+          "say": "대상 칸을 확인하고 작은 부분만 바꿔요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 3 8"
+        },
+        {
+          "action": "submit"
+        }
+      ]
+    },
+    {
+      "id": "function-copy",
+      "title": "함수에 포인터를 복사해 넘겨요",
+      "goal": "함수의 포인터 매개변수도 복사된 지역 변수예요.\n\nmove가 값을 바꾸도록 *p에 대입하세요.\n지역 포인터만 다른 곳으로 돌리면 원본은 그대로예요.",
+      "language": "c",
+      "entry_file": "main.c",
+      "starter_code": "#include <stdio.h>\nvoid move(int *p, int *replacement) {\n    // 포인터 복사본 대신 가리킨 칸을 바꿔요.\n    p = replacement;\n}\n\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    // 함수가 받은 주소로 a의 값을 바꿔요.\n    move(&a, &b);\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
+      "solution": "#include <stdio.h>\nvoid move(int *p, int *replacement) {\n    // 포인터 복사본 대신 가리킨 칸을 바꿔요.\n    *p = *replacement;\n}\n\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    // 함수가 받은 주소로 a의 값을 바꿔요.\n    move(&a, &b);\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
+      "files": {},
+      "tests": [
+        {
+          "input": "3 8\n",
+          "expected": "8 8"
+        },
+        {
+          "input": "7 12\n",
+          "expected": "12 12"
+        },
+        {
+          "input": "11 4\n",
+          "expected": "4 4"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "변수 칸과 그 칸을 가리키는 화살표를 그려 보세요.",
+        "*p = *replacement;"
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "#include <stdio.h>\nvoid move(int *p, int *replacement) {\n    // 포인터 복사본 대신 가리킨 칸을 바꿔요.\n    p = replacement;\n}\n\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    // 함수가 받은 주소로 a의 값을 바꿔요.\n    move(&a, &b);\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
+          "say": "먼저 값을 예상하고 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 3 8"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. 함수 안에서 p의 방향만 바꾸면 호출자의 주소는 그대로예요."
+        },
+        {
+          "action": "patch_code",
+          "before": "p = replacement;",
+          "after": "*p = *replacement;",
+          "say": "대상 칸을 확인하고 작은 부분만 바꿔요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 8 8"
+        },
+        {
+          "action": "submit"
+        }
+      ]
+    },
+    {
+      "id": "function-double",
+      "title": "호출자의 포인터를 바꿔요",
+      "goal": "호출자의 포인터를 바꾸려면 그 포인터의 주소를 넘겨요.\n\nredirect 안에서 *pp에 next를 대입하세요.\n함수 뒤 p가 b를 가리키게 해요.",
+      "language": "c",
+      "entry_file": "main.c",
+      "starter_code": "#include <stdio.h>\nvoid redirect(int **pp, int *next) {\n    // 호출자의 포인터 칸에 새 주소를 써요.\n    *pp = *pp;\n}\n\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    // p 자체의 주소를 전달해요.\n    redirect(&p, &b);\n    printf(\"%d %d\\n\", a, *p);\n    return 0;\n}\n",
+      "solution": "#include <stdio.h>\nvoid redirect(int **pp, int *next) {\n    // 호출자의 포인터 칸에 새 주소를 써요.\n    *pp = next;\n}\n\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    // p 자체의 주소를 전달해요.\n    redirect(&p, &b);\n    printf(\"%d %d\\n\", a, *p);\n    return 0;\n}\n",
+      "files": {},
+      "tests": [
+        {
+          "input": "3 8\n",
+          "expected": "3 8"
+        },
+        {
+          "input": "7 12\n",
+          "expected": "7 12"
+        },
+        {
+          "input": "11 4\n",
+          "expected": "11 4"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "변수 칸과 그 칸을 가리키는 화살표를 그려 보세요.",
+        "*pp = next;"
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "#include <stdio.h>\nvoid redirect(int **pp, int *next) {\n    // 호출자의 포인터 칸에 새 주소를 써요.\n    *pp = *pp;\n}\n\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    // p 자체의 주소를 전달해요.\n    redirect(&p, &b);\n    printf(\"%d %d\\n\", a, *p);\n    return 0;\n}\n",
+          "say": "먼저 값을 예상하고 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 3 3"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. 여기서 **pp에 쓰면 방향이 아니라 최종 값이 바뀌어요."
+        },
+        {
+          "action": "patch_code",
+          "before": "*pp = *pp;",
+          "after": "*pp = next;",
+          "say": "대상 칸을 확인하고 작은 부분만 바꿔요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 3 8"
+        },
+        {
+          "action": "submit"
+        }
+      ]
+    },
+    {
+      "id": "row-pointer",
+      "title": "배열 포인터는 행 하나를 옮겨요",
+      "goal": "배열 포인터에 1을 더하면 배열 한 묶음을 건너요.\n\n둘째 행의 첫 값을 출력하세요.\n행 번호만 0에서 1로 바꿔요.",
+      "language": "c",
+      "entry_file": "main.c",
+      "starter_code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    // 두 행, 세 열인 배열이에요.\n    int grid[2][3] = {{a, b, a + b}, {b + 1, a + 1, a * b}};\n    int (*row)[3] = grid;\n    // row[1]은 다음 행의 시작이에요.\n    printf(\"%d\\n\", row[0][0]);\n    return 0;\n}\n",
+      "solution": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    // 두 행, 세 열인 배열이에요.\n    int grid[2][3] = {{a, b, a + b}, {b + 1, a + 1, a * b}};\n    int (*row)[3] = grid;\n    // row[1]은 다음 행의 시작이에요.\n    printf(\"%d\\n\", row[1][0]);\n    return 0;\n}\n",
+      "files": {},
+      "tests": [
+        {
+          "input": "3 8\n",
+          "expected": "9"
+        },
+        {
+          "input": "7 12\n",
+          "expected": "13"
+        },
+        {
+          "input": "11 4\n",
+          "expected": "5"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "변수 칸과 그 칸을 가리키는 화살표를 그려 보세요.",
+        "row[1][0]"
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    // 두 행, 세 열인 배열이에요.\n    int grid[2][3] = {{a, b, a + b}, {b + 1, a + 1, a * b}};\n    int (*row)[3] = grid;\n    // row[1]은 다음 행의 시작이에요.\n    printf(\"%d\\n\", row[0][0]);\n    return 0;\n}\n",
+          "say": "먼저 값을 예상하고 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 3"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. int *refs[]와 int (*row)[3]은 다른 타입이에요."
+        },
+        {
+          "action": "patch_code",
+          "before": "row[0][0]",
+          "after": "row[1][0]",
+          "say": "대상 칸을 확인하고 작은 부분만 바꿔요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 9"
+        },
+        {
+          "action": "submit"
+        }
+      ]
+    },
+    {
+      "id": "triple",
+      "title": "도전 · 세 화살표 끝의 값을 바꿔요",
+      "goal": "포인터 단계가 늘어도 한 번씩 따라가면 돼요.\n\n세 번 따라간 a를 a+b로 바꾸세요.\nb 자체를 바꾸는 줄을 고쳐요.",
+      "language": "c",
+      "entry_file": "main.c",
+      "starter_code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int **pp = &p;\n    // p, pp, ppp를 순서대로 따라가요.\n    int ***ppp = &pp;\n    b = a + b;\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
+      "solution": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int **pp = &p;\n    // p, pp, ppp를 순서대로 따라가요.\n    int ***ppp = &pp;\n    ***ppp = a + b;\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
+      "files": {},
+      "tests": [
+        {
+          "input": "3 8\n",
+          "expected": "11 8"
+        },
+        {
+          "input": "7 12\n",
+          "expected": "19 12"
+        },
+        {
+          "input": "11 4\n",
+          "expected": "15 4"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": false,
+      "hints": [
+        "변수 칸과 그 칸을 가리키는 화살표를 그려 보세요.",
+        "***ppp = a + b;"
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int **pp = &p;\n    // p, pp, ppp를 순서대로 따라가요.\n    int ***ppp = &pp;\n    b = a + b;\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
+          "say": "먼저 값을 예상하고 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 3 11"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. 별 개수보다 각 단계가 가리키는 칸을 먼저 보세요."
+        },
+        {
+          "action": "patch_code",
+          "before": "b = a + b;",
+          "after": "***ppp = a + b;",
+          "say": "대상 칸을 확인하고 작은 부분만 바꿔요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 11 8"
+        },
+        {
+          "action": "submit"
+        }
+      ]
+    }
+  ]
+}
