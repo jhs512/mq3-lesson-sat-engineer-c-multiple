@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "sat-engineer-c-multiple",
-  "revision": "v1.0.1",
+  "revision": "v1.0.2",
   "title": "C · 다중 포인터와 함수 전달을 풀어요",
   "description": "중간 주소와 마지막 값을 구분해요. 필수 6문제와 선택 도전 1문제예요.",
   "sources": [
@@ -54,13 +54,34 @@
       ],
       "narration": [
         {
+          "action": "set_input",
+          "value": "3 8\n"
+        },
+        {
           "action": "set_code",
           "code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int *q = &b;\n    // 포인터 칸을 가리키는 포인터예요.\n    int **pp = &q;\n    printf(\"%d\\n\", **pp);\n    return 0;\n}\n",
-          "say": "먼저 준비 코드를 실행해 볼게요."
+          "say": "먼저 입력과 변수의 연결을 살펴봐요.",
+          "lines": [
+            9,
+            9
+          ]
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            9,
+            9
+          ],
+          "text": "pp의 값은 포인터 칸의 주소예요. 별 하나마다 화살표를 한 번 따라가요."
         },
         {
           "action": "run",
-          "expected_failure": false
+          "expected_failure": false,
+          "lines": [
+            9,
+            9
+          ]
         },
         {
           "action": "say",
@@ -69,8 +90,24 @@
         },
         {
           "action": "say",
+          "target": "memory",
+          "text": "첫 예제의 연결을 그림으로 짚어봐요. 주소 숫자 대신 어느 칸인지 표시했어요.",
+          "diagram": {
+            "title": "바꾸기 전 · 첫 예제 입력",
+            "rows": [
+              "pp → q → b [8]",
+              "p → a [3]"
+            ]
+          }
+        },
+        {
+          "action": "say",
           "target": "editor",
-          "text": "조심하세요. *pp는 포인터이고 **pp는 최종 값이에요."
+          "text": "조심하세요. *pp는 포인터이고 **pp는 최종 값이에요.",
+          "lines": [
+            9,
+            9
+          ]
         },
         {
           "action": "patch_code",
@@ -79,12 +116,37 @@
           "say": "pp가 p의 주소를 담도록 바꿔요. p를 거쳐 a로 가게 만드는 거예요."
         },
         {
-          "action": "run"
+          "action": "run",
+          "lines": [
+            9,
+            9
+          ]
         },
         {
           "action": "say",
           "target": "output",
           "text": "별 두 개로 읽은 값이 a인지 보세요. 별 하나를 붙일 때마다 한 칸을 따라가요."
+        },
+        {
+          "action": "say",
+          "target": "memory",
+          "text": "같은 입력으로 바뀐 칸만 비교해 보세요. 코드의 왼쪽이 어느 칸인지 다시 짚어봐요.",
+          "diagram": {
+            "title": "바꾼 뒤 · 같은 첫 예제 입력",
+            "rows": [
+              "pp → p → a [3]",
+              "q → b [8]"
+            ]
+          }
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            9,
+            9
+          ],
+          "text": "다른 예제 입력에서도 직접 실행해 보세요. 숫자가 달라도 같은 연결로 설명할 수 있나요?"
         },
         {
           "action": "submit"
@@ -123,13 +185,34 @@
       ],
       "narration": [
         {
+          "action": "set_input",
+          "value": "3 8\n"
+        },
+        {
           "action": "set_code",
           "code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int **pp = &p;\n    // 두 화살표를 따라 a의 칸에 써요.\n    b = a + b;\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
-          "say": "먼저 준비 코드를 실행해 볼게요."
+          "say": "먼저 입력과 변수의 연결을 살펴봐요.",
+          "lines": [
+            7,
+            7
+          ]
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            7,
+            7
+          ],
+          "text": "별 하나면 p 칸에 도착해요. 별 두 개면 a의 값 칸에 도착해요."
         },
         {
           "action": "run",
-          "expected_failure": false
+          "expected_failure": false,
+          "lines": [
+            9,
+            9
+          ]
         },
         {
           "action": "say",
@@ -138,8 +221,24 @@
         },
         {
           "action": "say",
+          "target": "memory",
+          "text": "첫 예제의 연결을 그림으로 짚어봐요. 주소 숫자 대신 어느 칸인지 표시했어요.",
+          "diagram": {
+            "title": "바꾸기 전 · 첫 예제 입력",
+            "rows": [
+              "pp → p → a [3]",
+              "b [11]"
+            ]
+          }
+        },
+        {
+          "action": "say",
           "target": "editor",
-          "text": "조심하세요. *pp와 **pp는 대입할 수 있는 값의 종류도 달라요."
+          "text": "조심하세요. *pp와 **pp는 대입할 수 있는 값의 종류도 달라요.",
+          "lines": [
+            9,
+            9
+          ]
         },
         {
           "action": "patch_code",
@@ -148,12 +247,37 @@
           "say": "별 두 개를 붙인 pp에 합을 써요. pp에서 출발해 도착하는 칸을 바꾸는 거예요."
         },
         {
-          "action": "run"
+          "action": "run",
+          "lines": [
+            9,
+            9
+          ]
         },
         {
           "action": "say",
           "target": "output",
           "text": "a와 b 중 어느 칸이 바뀌었나요? 대입 왼쪽의 화살표 끝부터 찾아야 해요."
+        },
+        {
+          "action": "say",
+          "target": "memory",
+          "text": "같은 입력으로 바뀐 칸만 비교해 보세요. 코드의 왼쪽이 어느 칸인지 다시 짚어봐요.",
+          "diagram": {
+            "title": "바꾼 뒤 · 같은 첫 예제 입력",
+            "rows": [
+              "pp → p → a [11]",
+              "b [8]"
+            ]
+          }
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            9,
+            9
+          ],
+          "text": "다른 예제 입력에서도 직접 실행해 보세요. 숫자가 달라도 같은 연결로 설명할 수 있나요?"
         },
         {
           "action": "submit"
@@ -192,13 +316,34 @@
       ],
       "narration": [
         {
+          "action": "set_input",
+          "value": "3 8\n"
+        },
+        {
           "action": "set_code",
           "code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int **pp = &p;\n    // 중간 화살표만 b로 돌려요.\n    **pp = b;\n    printf(\"%d %d\\n\", a, *p);\n    return 0;\n}\n",
-          "say": "먼저 준비 코드를 실행해 볼게요."
+          "say": "먼저 입력과 변수의 연결을 살펴봐요.",
+          "lines": [
+            7,
+            7
+          ]
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            7,
+            7
+          ],
+          "text": "이번에는 값 칸을 바꾸지 않아요. p가 담은 주소만 바꿔야 해요."
         },
         {
           "action": "run",
-          "expected_failure": false
+          "expected_failure": false,
+          "lines": [
+            9,
+            9
+          ]
         },
         {
           "action": "say",
@@ -207,8 +352,24 @@
         },
         {
           "action": "say",
+          "target": "memory",
+          "text": "첫 예제의 연결을 그림으로 짚어봐요. 주소 숫자 대신 어느 칸인지 표시했어요.",
+          "diagram": {
+            "title": "바꾸기 전 · 첫 예제 입력",
+            "rows": [
+              "pp → p → a [8]",
+              "b [8]"
+            ]
+          }
+        },
+        {
+          "action": "say",
           "target": "editor",
-          "text": "조심하세요. 최종 값 변경과 중간 주소 변경을 구분해요."
+          "text": "조심하세요. 최종 값 변경과 중간 주소 변경을 구분해요.",
+          "lines": [
+            9,
+            9
+          ]
         },
         {
           "action": "patch_code",
@@ -217,12 +378,37 @@
           "say": "별 하나인 pp에 b의 주소를 넣어요. 중간 칸 p가 새 주소를 담게 돼요."
         },
         {
-          "action": "run"
+          "action": "run",
+          "lines": [
+            9,
+            9
+          ]
         },
         {
           "action": "say",
           "target": "output",
           "text": "p로 읽는 값이 달라졌는지 보세요. 중간 포인터의 방향이 바뀐 결과예요."
+        },
+        {
+          "action": "say",
+          "target": "memory",
+          "text": "같은 입력으로 바뀐 칸만 비교해 보세요. 코드의 왼쪽이 어느 칸인지 다시 짚어봐요.",
+          "diagram": {
+            "title": "바꾼 뒤 · 같은 첫 예제 입력",
+            "rows": [
+              "pp → p → b [8]",
+              "a [3]"
+            ]
+          }
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            9,
+            9
+          ],
+          "text": "다른 예제 입력에서도 직접 실행해 보세요. 숫자가 달라도 같은 연결로 설명할 수 있나요?"
         },
         {
           "action": "submit"
@@ -261,13 +447,34 @@
       ],
       "narration": [
         {
+          "action": "set_input",
+          "value": "3 8\n"
+        },
+        {
           "action": "set_code",
           "code": "#include <stdio.h>\nvoid move(int *p, int *replacement) {\n    // 포인터 복사본 대신 가리킨 칸을 바꿔요.\n    p = replacement;\n}\n\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    // 함수가 받은 주소로 a의 값을 바꿔요.\n    move(&a, &b);\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
-          "say": "먼저 준비 코드를 실행해 볼게요."
+          "say": "먼저 입력과 변수의 연결을 살펴봐요.",
+          "lines": [
+            2,
+            2
+          ]
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            2,
+            2
+          ],
+          "text": "함수의 p는 주소를 복사받은 지역 칸이에요. 그 칸만 바꿔도 호출자 변수는 그대로예요."
         },
         {
           "action": "run",
-          "expected_failure": false
+          "expected_failure": false,
+          "lines": [
+            4,
+            4
+          ]
         },
         {
           "action": "say",
@@ -276,8 +483,24 @@
         },
         {
           "action": "say",
+          "target": "memory",
+          "text": "첫 예제의 연결을 그림으로 짚어봐요. 주소 숫자 대신 어느 칸인지 표시했어요.",
+          "diagram": {
+            "title": "바꾸기 전 · 첫 예제 입력",
+            "rows": [
+              "함수 p → b [8]",
+              "호출자 a [3]"
+            ]
+          }
+        },
+        {
+          "action": "say",
           "target": "editor",
-          "text": "조심하세요. 함수 안에서 p의 방향만 바꾸면 호출자의 주소는 그대로예요."
+          "text": "조심하세요. 함수 안에서 p의 방향만 바꾸면 호출자의 주소는 그대로예요.",
+          "lines": [
+            4,
+            4
+          ]
         },
         {
           "action": "patch_code",
@@ -286,12 +509,37 @@
           "say": "포인터 자체 대신 가리키는 값 칸에 써요. 다른 주소에서 읽은 값을 옮기는 거예요."
         },
         {
-          "action": "run"
+          "action": "run",
+          "lines": [
+            4,
+            4
+          ]
         },
         {
           "action": "say",
           "target": "output",
           "text": "호출한 쪽의 값이 바뀌었는지 보세요. 주소 복사와 주소가 가리킨 칸은 구분해야 해요."
+        },
+        {
+          "action": "say",
+          "target": "memory",
+          "text": "같은 입력으로 바뀐 칸만 비교해 보세요. 코드의 왼쪽이 어느 칸인지 다시 짚어봐요.",
+          "diagram": {
+            "title": "바꾼 뒤 · 같은 첫 예제 입력",
+            "rows": [
+              "함수 p → a [8]",
+              "호출자 b [8]"
+            ]
+          }
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            4,
+            4
+          ],
+          "text": "다른 예제 입력에서도 직접 실행해 보세요. 숫자가 달라도 같은 연결로 설명할 수 있나요?"
         },
         {
           "action": "submit"
@@ -330,13 +578,34 @@
       ],
       "narration": [
         {
+          "action": "set_input",
+          "value": "3 8\n"
+        },
+        {
           "action": "set_code",
           "code": "#include <stdio.h>\nvoid redirect(int **pp, int *next) {\n    // 호출자의 포인터 칸에 새 주소를 써요.\n    *pp = *pp;\n}\n\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    // p 자체의 주소를 전달해요.\n    redirect(&p, &b);\n    printf(\"%d %d\\n\", a, *p);\n    return 0;\n}\n",
-          "say": "먼저 준비 코드를 실행해 볼게요."
+          "say": "먼저 입력과 변수의 연결을 살펴봐요.",
+          "lines": [
+            2,
+            2
+          ]
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            2,
+            2
+          ],
+          "text": "호출자의 p 칸 자체를 바꾸려면요. 그 p 칸의 주소를 함수에 건네야 해요."
         },
         {
           "action": "run",
-          "expected_failure": false
+          "expected_failure": false,
+          "lines": [
+            4,
+            4
+          ]
         },
         {
           "action": "say",
@@ -345,8 +614,24 @@
         },
         {
           "action": "say",
+          "target": "memory",
+          "text": "첫 예제의 연결을 그림으로 짚어봐요. 주소 숫자 대신 어느 칸인지 표시했어요.",
+          "diagram": {
+            "title": "바꾸기 전 · 첫 예제 입력",
+            "rows": [
+              "함수 pp → 호출자 p → a [3]",
+              "next → b [8]"
+            ]
+          }
+        },
+        {
+          "action": "say",
           "target": "editor",
-          "text": "조심하세요. 여기서 **pp에 쓰면 방향이 아니라 최종 값이 바뀌어요."
+          "text": "조심하세요. 여기서 **pp에 쓰면 방향이 아니라 최종 값이 바뀌어요.",
+          "lines": [
+            4,
+            4
+          ]
         },
         {
           "action": "patch_code",
@@ -355,12 +640,37 @@
           "say": "pp가 가리키는 포인터 칸에 새 주소를 써요. 호출한 쪽 포인터를 바꾸는 거예요."
         },
         {
-          "action": "run"
+          "action": "run",
+          "lines": [
+            4,
+            4
+          ]
         },
         {
           "action": "say",
           "target": "output",
           "text": "함수 밖에서도 새 대상을 읽는지 보세요. 포인터의 주소를 넘겨야 포인터 칸을 바꿀 수 있어요."
+        },
+        {
+          "action": "say",
+          "target": "memory",
+          "text": "같은 입력으로 바뀐 칸만 비교해 보세요. 코드의 왼쪽이 어느 칸인지 다시 짚어봐요.",
+          "diagram": {
+            "title": "바꾼 뒤 · 같은 첫 예제 입력",
+            "rows": [
+              "함수 pp → 호출자 p → b [8]",
+              "a [3]"
+            ]
+          }
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            4,
+            4
+          ],
+          "text": "다른 예제 입력에서도 직접 실행해 보세요. 숫자가 달라도 같은 연결로 설명할 수 있나요?"
         },
         {
           "action": "submit"
@@ -399,13 +709,34 @@
       ],
       "narration": [
         {
+          "action": "set_input",
+          "value": "3 8\n"
+        },
+        {
           "action": "set_code",
           "code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    // 두 행, 세 열인 배열이에요.\n    int grid[2][3] = {{a, b, a + b}, {b + 1, a + 1, a * b}};\n    int (*row)[3] = grid;\n    // row[1]은 다음 행의 시작이에요.\n    printf(\"%d\\n\", row[0][0]);\n    return 0;\n}\n",
-          "say": "먼저 준비 코드를 실행해 볼게요."
+          "say": "먼저 입력과 변수의 연결을 살펴봐요.",
+          "lines": [
+            8,
+            8
+          ]
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            8,
+            8
+          ],
+          "text": "row는 정수 하나가 아닌 행을 가리켜요. 행을 고른 다음 그 행의 열을 골라요."
         },
         {
           "action": "run",
-          "expected_failure": false
+          "expected_failure": false,
+          "lines": [
+            10,
+            10
+          ]
         },
         {
           "action": "say",
@@ -414,8 +745,24 @@
         },
         {
           "action": "say",
+          "target": "memory",
+          "text": "첫 예제의 연결을 그림으로 짚어봐요. 주소 숫자 대신 어느 칸인지 표시했어요.",
+          "diagram": {
+            "title": "바꾸기 전 · 첫 예제 입력",
+            "rows": [
+              "row[0] → [3, 8, 11]",
+              "row[1] → [9, 4, 24]"
+            ]
+          }
+        },
+        {
+          "action": "say",
           "target": "editor",
-          "text": "조심하세요. int *refs[]와 int (*row)[3]은 다른 타입이에요."
+          "text": "조심하세요. int *refs[]와 int (*row)[3]은 다른 타입이에요.",
+          "lines": [
+            10,
+            10
+          ]
         },
         {
           "action": "patch_code",
@@ -424,12 +771,37 @@
           "say": "행 번호를 하나 늘려요. 행 안의 위치는 첫 칸으로 두는 거예요."
         },
         {
-          "action": "run"
+          "action": "run",
+          "lines": [
+            10,
+            10
+          ]
         },
         {
           "action": "say",
           "target": "output",
           "text": "다음 행의 첫 값이 나왔는지 보세요. 배열 포인터의 이동 단위는 행 하나예요."
+        },
+        {
+          "action": "say",
+          "target": "memory",
+          "text": "같은 입력으로 바뀐 칸만 비교해 보세요. 코드의 왼쪽이 어느 칸인지 다시 짚어봐요.",
+          "diagram": {
+            "title": "바꾼 뒤 · 같은 첫 예제 입력",
+            "rows": [
+              "row[1][0] → 9",
+              "한 행을 이동하면 정수 세 칸을 건너가요"
+            ]
+          }
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            10,
+            10
+          ],
+          "text": "다른 예제 입력에서도 직접 실행해 보세요. 숫자가 달라도 같은 연결로 설명할 수 있나요?"
         },
         {
           "action": "submit"
@@ -468,13 +840,34 @@
       ],
       "narration": [
         {
+          "action": "set_input",
+          "value": "3 8\n"
+        },
+        {
           "action": "set_code",
           "code": "#include <stdio.h>\nint main(void) {\n    // 입력값을 바꿔도 같은 원리로 풀어요.\n    int a, b;\n    if (scanf(\"%d %d\", &a, &b) != 2) return 1;\n    int *p = &a;\n    int **pp = &p;\n    // p, pp, ppp를 순서대로 따라가요.\n    int ***ppp = &pp;\n    b = a + b;\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
-          "say": "먼저 준비 코드를 실행해 볼게요."
+          "say": "먼저 입력과 변수의 연결을 살펴봐요.",
+          "lines": [
+            9,
+            9
+          ]
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            9,
+            9
+          ],
+          "text": "별의 개수를 먼저 세지 말고 칸을 따라가요. 세 번째 화살표 끝이 실제 값 칸이에요."
         },
         {
           "action": "run",
-          "expected_failure": false
+          "expected_failure": false,
+          "lines": [
+            10,
+            10
+          ]
         },
         {
           "action": "say",
@@ -483,8 +876,24 @@
         },
         {
           "action": "say",
+          "target": "memory",
+          "text": "첫 예제의 연결을 그림으로 짚어봐요. 주소 숫자 대신 어느 칸인지 표시했어요.",
+          "diagram": {
+            "title": "바꾸기 전 · 첫 예제 입력",
+            "rows": [
+              "ppp → pp → p → a [3]",
+              "b [11]"
+            ]
+          }
+        },
+        {
+          "action": "say",
           "target": "editor",
-          "text": "조심하세요. 별 개수보다 각 단계가 가리키는 칸을 먼저 보세요."
+          "text": "조심하세요. 별 개수보다 각 단계가 가리키는 칸을 먼저 보세요.",
+          "lines": [
+            10,
+            10
+          ]
         },
         {
           "action": "patch_code",
@@ -493,12 +902,37 @@
           "say": "별 세 개를 붙여 끝의 값 칸에 써요. 중간 포인터들의 주소는 그대로예요."
         },
         {
-          "action": "run"
+          "action": "run",
+          "lines": [
+            10,
+            10
+          ]
         },
         {
           "action": "say",
           "target": "output",
           "text": "세 화살표를 따라간 칸의 값이 바뀌었어요. 별의 개수만큼 순서대로 따라가 보세요."
+        },
+        {
+          "action": "say",
+          "target": "memory",
+          "text": "같은 입력으로 바뀐 칸만 비교해 보세요. 코드의 왼쪽이 어느 칸인지 다시 짚어봐요.",
+          "diagram": {
+            "title": "바꾼 뒤 · 같은 첫 예제 입력",
+            "rows": [
+              "ppp → pp → p → a [11]",
+              "b [8]"
+            ]
+          }
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "lines": [
+            10,
+            10
+          ],
+          "text": "다른 예제 입력에서도 직접 실행해 보세요. 숫자가 달라도 같은 연결로 설명할 수 있나요?"
         },
         {
           "action": "submit"
